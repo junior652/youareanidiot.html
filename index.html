@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YOU ARE AN IDIOT</title>
+    <title>Simulador de Janelas</title>
     <style>
         body {
             margin: 0;
@@ -34,27 +34,18 @@
         .window {
             position: absolute;
             width: 200px;
-            height: 200px;
+            height: 150px; /* Proporção 4:3 */
             border: 1px solid #ccc;
             background-color: white;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             overflow: hidden;
             box-sizing: border-box;
         }
-        .window iframe {
+        .window img {
             width: 100%;
             height: 100%;
-            border: none;
-        }
-        .window .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: transparent;
-            z-index: 10; /* Acima do iframe para bloquear interações */
-            pointer-events: all; /* Captura todos os eventos de interação */
+            object-fit: contain; /* Mantém a proporção correta dentro da janela */
+            display: none; /* Inicialmente oculto */
         }
         .window .close-button {
             position: absolute;
@@ -66,7 +57,7 @@
             padding: 5px 10px;
             cursor: pointer;
             font-size: 14px;
-            z-index: 20; /* Acima da overlay para ser clicável */
+            z-index: 20; /* Acima da imagem para ser clicável */
         }
         .window .close-button:hover {
             background-color: #cc0000;
@@ -83,28 +74,24 @@
 
         function createInitialWindow() {
             document.getElementById('openButton').style.display = 'none'; // Esconde o botão
-            createIframe("https://youareanidiot.cc/lol.html"); // Cria apenas uma janela inicial
+            createWindow(); // Cria apenas uma janela inicial
         }
 
         function createWindows() {
-            const url = "https://youareanidiot.cc/lol.html";
             const numWindows = Math.floor(Math.random() * 4) + 2; // Número aleatório entre 2 e 5
 
             for (let i = 0; i < numWindows; i++) {
-                createIframe(url);
+                createWindow();
             }
         }
 
-        function createIframe(url) {
+        function createWindow() {
             const windowDiv = document.createElement('div');
             windowDiv.classList.add('window');
             windowDiv.style.zIndex = windowCount + 1; // Ajusta o z-index baseado no número de janelas para evitar sobreposição
 
-            const iframe = document.createElement('iframe');
-            iframe.src = url;
-
-            const overlay = document.createElement('div');
-            overlay.classList.add('overlay'); // Camada invisível sobre o iframe para bloquear interações
+            const img = document.createElement('img');
+            img.src = 'IMG_6172.GIF'; // Define o GIF que será mostrado na janela
 
             const closeButton = document.createElement('button');
             closeButton.classList.add('close-button');
@@ -115,24 +102,18 @@
                 createWindows(); // Cria de 2 a 5 novas janelas ao fechar uma existente
             };
 
-            windowDiv.appendChild(iframe);
-            windowDiv.appendChild(overlay); // Adiciona a camada sobre o iframe para bloquear cliques
+            windowDiv.appendChild(img); // Adiciona o GIF na janela
             windowDiv.appendChild(closeButton);
             document.body.appendChild(windowDiv);
 
             // Adiciona áudio à janela
-            const audio = document.createElement('audio');
-            audio.src = 'IMG_6142.mp3'; // Substitua pelo caminho correto do arquivo de áudio
-            audio.loop = true; // Faz o áudio repetir em loop
-            audio.volume = 0.5; // Define o volume (0.0 a 1.0)
-            
-            // Define um delay aleatório para o início do áudio
-            const delay = Math.random() * 5000; // Delay de até 5 segundos
-            setTimeout(() => {
-                audio.play().catch(error => console.error("Não foi possível iniciar o áudio:", error));
-            }, delay);
+            addAudioToWindow(windowDiv);
 
-            windowDiv.appendChild(audio);
+            // Mostra o GIF com um atraso aleatório de até 3 segundos
+            const delay = Math.random() * 3000; // Atraso aleatório entre 0 e 3000 milissegundos (3 segundos)
+            setTimeout(() => {
+                img.style.display = 'block'; // Exibe o GIF após o atraso
+            }, delay);
 
             windowCount++;
             moveWindowContinuously(windowDiv);
@@ -141,6 +122,22 @@
             if (windowCount > maxWindows) {
                 simulateLag();
             }
+        }
+
+        function addAudioToWindow(windowDiv) {
+            const audio = document.createElement('audio');
+            audio.src = 'IMG_6142.mp3'; // Substitua pelo caminho correto do arquivo de áudio
+            audio.loop = true; // Faz o áudio repetir em loop
+            audio.volume = 0.5; // Define o volume (0.0 a 1.0)
+
+            // Define um delay aleatório para o início do áudio, até 4 segundos
+            const delay = Math.floor(Math.random() * 4000); // Delay aleatório entre 0 e 4000 milissegundos
+
+            setTimeout(() => {
+                audio.play().catch(error => console.error("Não foi possível iniciar o áudio:", error));
+            }, delay);
+
+            windowDiv.appendChild(audio);
         }
 
         function moveWindowContinuously(windowDiv) {
