@@ -54,6 +54,7 @@
             height: 100%;
             background: transparent;
             z-index: 10; /* Acima do iframe para bloquear interações */
+            pointer-events: auto; /* Permite capturar cliques */
         }
         .window .close-button {
             position: absolute;
@@ -103,7 +104,7 @@
             iframe.src = url;
 
             const overlay = document.createElement('div');
-            overlay.classList.add('overlay'); // Camada transparente sobre o iframe para bloquear interações
+            overlay.classList.add('overlay'); // Camada invisível sobre o iframe para bloquear interações
 
             const closeButton = document.createElement('button');
             closeButton.classList.add('close-button');
@@ -115,7 +116,7 @@
             };
 
             windowDiv.appendChild(iframe);
-            windowDiv.appendChild(overlay); // Adiciona a camada sobre o iframe
+            windowDiv.appendChild(overlay); // Adiciona a camada sobre o iframe para bloquear cliques
             windowDiv.appendChild(closeButton);
             document.body.appendChild(windowDiv);
 
